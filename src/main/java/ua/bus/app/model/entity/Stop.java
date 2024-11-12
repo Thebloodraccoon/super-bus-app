@@ -29,5 +29,4 @@ public class Stop {
     private Timestamp arrivalTime;
 
     private Timestamp departureTime;
-
 }
