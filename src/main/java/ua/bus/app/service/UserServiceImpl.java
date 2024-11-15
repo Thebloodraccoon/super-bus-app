@@ -49,7 +49,6 @@ public class UserServiceImpl implements UserService {
 
         user.setName(userDTO.getName());
         user.setPhone(userDTO.getPhone());
-        user.setRole(User.Role.valueOf(userDTO.getRole()));
 
         User updatedUser = userJpaRepo.save(user);
         return userMapper.toUserDTO(updatedUser);

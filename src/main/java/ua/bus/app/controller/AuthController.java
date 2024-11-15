@@ -11,6 +11,7 @@ import ua.bus.app.exception.PasswordEncryptionException;
 import ua.bus.app.exception.UserAlreadyExistsException;
 import ua.bus.app.model.dto.LoginDTO;
 import ua.bus.app.model.dto.RegisterDTO;
+import ua.bus.app.model.entity.User;
 import ua.bus.app.service.AuthService;
 import org.springframework.ui.Model;
 
@@ -25,11 +26,15 @@ public class AuthController {
                               @RequestParam String loginPassword,
                               Model model) throws PasswordEncryptionException {
         LoginDTO loginDTO = new LoginDTO(loginEmail, loginPassword);
-        Long user = authService.loginUser(loginDTO);
+        User user = authService.loginUser(loginDTO);
 
 
-        if (user != 0) {
-            return "redirect:/user/profile/" + user;
+        if (user.getRole().toString().equals("CLIENT")) {
+            return "redirect:/user/client/" + user.getId();
+        }
+
+        if (user.getRole().toString().equals("PARTNER")) {
+            return "redirect:/user/partner/" + user.getId();
         }
 
         model.addAttribute("error", "Невірне ім'я користувача або пароль");
@@ -47,14 +52,17 @@ public class AuthController {
             Model model) throws UserAlreadyExistsException {
 
         RegisterDTO registerDTO = new RegisterDTO(registerName, registerEmail, registerPhone, registerPassword, registerRole);
-        Long userId = authService.registerUser(registerDTO);
-
-        if (userId != 0) {
-            return "redirect:/user/profile/" + userId;
-        } else {
-            model.addAttribute("error", "Невірне ім'я користувача або інша помилка реєстрації");
-            return "index";
+        User user = authService.registerUser(registerDTO);
+        if (user.getRole().toString().equals("CLIENT")) {
+            return "redirect:/user/client/" + user.getId();
         }
+
+        if (user.getRole().toString().equals("PARTNER")) {
+            return "redirect:/user/partner/" + user.getId();
+        }
+
+        model.addAttribute("error", "Невірне ім'я користувача або інша помилка реєстрації");
+        return "index";
     }
 
 

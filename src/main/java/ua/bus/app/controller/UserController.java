@@ -18,11 +18,19 @@ import org.springframework.ui.Model;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/profile/{id}")
-    public String showUserProfile(@PathVariable("id") Long id, Model model) throws UserNotFoundException {
+    @GetMapping("/client/{id}")
+    public String showClientProfile(@PathVariable("id") Long id, Model model) throws UserNotFoundException {
         UserDTO userById = userService.getUserById(id);
         model.addAttribute("user", userById);
 
-        return "user-profile";
+        return "client-profile";
+    }
+
+    @GetMapping("/partner/{id}")
+    public String showPartnerProfile(@PathVariable("id") Long id, Model model) throws UserNotFoundException {
+        UserDTO userById = userService.getUserById(id);
+        model.addAttribute("user", userById);
+
+        return "partner-profile";
     }
 }

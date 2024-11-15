@@ -10,6 +10,7 @@ import ua.bus.app.exception.UserNotFoundException;
 import ua.bus.app.model.dto.LoginDTO;
 import ua.bus.app.model.dto.RegisterDTO;
 import ua.bus.app.model.entity.User;
+import ua.bus.app.model.entity.enums.Role;
 import ua.bus.app.repo.UserJpaRepo;
 
 @Service
@@ -17,7 +18,7 @@ import ua.bus.app.repo.UserJpaRepo;
 public class AuthService {
     private final UserJpaRepo userJpaRepo;
 
-    public Long loginUser(LoginDTO loginDTO) throws PasswordEncryptionException {
+    public User loginUser(LoginDTO loginDTO) throws PasswordEncryptionException {
         try {
             User user = userJpaRepo.findByEmail(loginDTO.getEmail());
 
@@ -29,13 +30,13 @@ public class AuthService {
                 throw new InvalidPasswordException("Invalid password");
             }
 
-            return user.getId();
+            return user;
         } catch (Exception e) {
             throw new PasswordEncryptionException("Error decrypting password");
         }
     }
 
-    public Long registerUser(RegisterDTO registerDTO) throws UserAlreadyExistsException {
+    public User registerUser(RegisterDTO registerDTO) throws UserAlreadyExistsException {
             User existed = userJpaRepo.findByEmail(registerDTO.getEmail());
 
             if (existed != null) throw new UserAlreadyExistsException("User already exists");
@@ -44,14 +45,15 @@ public class AuthService {
             user.setEmail(registerDTO.getEmail());
             user.setName(registerDTO.getName());
             user.setPhone(registerDTO.getPhone());
-            user.setRole(User.Role.valueOf(registerDTO.getRole()));
 
-            // Encrypt password before saving
+            Role role = Role.fromString(registerDTO.getRole());
+            user.setRole(role);
+
             String encryptedPassword = registerDTO.getPassword();
-            user.setPasswordHash(encryptedPassword);
+            user.setPasswordHash(registerDTO.getPassword());
 
             User saved = userJpaRepo.save(user);
 
-            return saved.getId();
+            return saved;
     }
 }

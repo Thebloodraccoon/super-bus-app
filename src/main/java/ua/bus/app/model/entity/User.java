@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import ua.bus.app.model.entity.enums.Role;
 
 
 @Data
@@ -30,24 +31,4 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
-
-    public enum Role {
-        CLIENT, PARTNER;
-
-        public static Role fromString(String role) {
-            if (role != null) {
-                for (Role r : Role.values()) {
-                    if (r.name().equalsIgnoreCase(role)) {
-                        return r;
-                    }
-                }
-            }
-            throw new IllegalArgumentException("Unexpected value: " + role);
-        }
-
-        // Convert enum to string
-        public String toString() {
-            return name();
-        }
-    }
 }
