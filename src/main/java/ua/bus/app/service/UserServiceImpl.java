@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
 
         User updatedUser = userJpaRepo.save(user);
