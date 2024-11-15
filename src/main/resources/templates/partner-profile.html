@@ -32,32 +32,88 @@
         <main>
             <section class="container my-5">
                 <h2 class="text-center mb-4 text-primary">Профіль Партнера</h2>
-
                 <div class="row">
-                    <div class="col-md-6 offset-md-3">
-                        <!-- User profile card -->
-                        <div class="card shadow-lg border-0">
-                            <div class="card-body">
-                                <h3 class="text-center text-primary">Особиста інформація</h3>
-                                <div class="mb-3">
-                                    <strong>Ім'я:</strong>
-                                    <p th:text="${user.name}"></p>
-                                </div>
-                                <div class="mb-3">
-                                    <strong>Електронна пошта:</strong>
-                                    <p th:text="${user.email}"></p>
-                                </div>
-                                <div class="mb-3">
-                                    <strong>Номер телефону:</strong>
-                                    <p th:text="${user.phone}"></p>
-                                </div>
-                                <a href="#editProfileModal" class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#editProfileModal">Редагувати профіль</a>
+                    <div class="col-md-4">
+                        <div class="card shadow-lg border-0 mb-4">
+                            <div class="card-body text-center">
+                                <img src="/images/parther.jpg" alt="Фото профілю" class="img-fluid mb-2" style="width: 250px; height: 250px">
+                                <h4 th:text="${user.name}" class="text-primary"></h4>
+                                <p class="text-muted" th:text="${user.email}"></p>
+                                <p class="text-muted" th:text="${user.phone}"></p>
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-8">
+                        <div class="card shadow-lg border-0">
+                            <div class="card-body">
+                                <h3 class="text-primary mb-4">Інформація профілю</h3>
+                                <div class="mb-3">
+                                    <h5 class="fw-bold">Ім'я</h5>
+                                    <p th:text="${user.name}"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <h5 class="fw-bold">Електронна пошта</h5>
+                                    <p th:text="${user.email}"></p>
+                                </div>
+                                <div class="mb-3">
+                                    <h5 class="fw-bold">Номер телефону</h5>
+                                    <p th:text="${user.phone}"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-fluid mt-4">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createRouteModal">
+                                    Створити маршрут
+                                </a>
+                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                    Редагувати профіль
+                                </button>
+                                <form th:action="@{'/user/delete/' + ${user.id}}" method="post">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Ви впевнені, що хочете видалити акаунт?');">
+                                        Видалити акаунт
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
+
             </section>
 
+            <div class="modal fade" id="createRouteModal" tabindex="-1" aria-labelledby="createRouteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createRouteModalLabel">Створити маршрут</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/route/create}" method="post">
+                                <div class="mb-3">
+                                    <label for="startLocation" class="form-label">Початкова точка</label>
+                                    <input type="text" class="form-control" id="startLocation" name="startLocation" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="endLocation" class="form-label">Кінцева точка</label>
+                                    <input type="text" class="form-control" id="endLocation" name="endLocation" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Опис</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Ціна (грн)</label>
+                                    <input type="number" class="form-control" id="price" name="price" required>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">Створити маршрут</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Edit Profile Modal -->
             <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -67,22 +123,18 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="/user/update" method="post">
+                            <form th:action="@{'/user/update/' + ${user.id}}" method="post">
                                 <div class="mb-3">
                                     <label for="editName" class="form-label">Ім'я</label>
-                                    <input type="text" class="form-control" id="editName" name="name" th:value="${user.name}" required>
+                                    <input type="text" class="form-control" id="editName" name="editName" th:value="${user.name}" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editEmail" class="form-label">Електронна пошта</label>
-                                    <input type="email" class="form-control" id="editEmail" name="email" th:value="${user.email}" required>
+                                    <input type="email" class="form-control" id="editEmail" name="editEmail" th:value="${user.email}" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editPhone" class="form-label">Номер телефону</label>
-                                    <input type="tel" class="form-control" id="editPhone" name="phone" th:value="${user.phone}" required pattern="^\+?[0-9]{10,15}$">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="editPassword" class="form-label">Новый пароль</label>
-                                    <input type="password" class="form-control" id="editPassword" name="password" placeholder="Введіть новий пароль">
+                                    <input type="tel" class="form-control" id="editPhone" name="editPhone" th:value="${user.phone}" required pattern="^\+?[0-9]{10,15}$">
                                 </div>
                                 <button type="submit" class="btn btn-success w-100">Оновити профіль</button>
                             </form>
@@ -90,6 +142,8 @@
                     </div>
                 </div>
             </div>
+
+
         </main>
 
         <footer class="bg-light py-4">
