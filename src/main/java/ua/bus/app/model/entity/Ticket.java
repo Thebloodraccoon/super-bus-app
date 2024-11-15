@@ -25,7 +25,7 @@ public class Ticket {
     @JoinColumn(name = "route_id", nullable = false)
     private Route route;
 
-    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(nullable = false)
     private LocalDateTime purchaseDate;
 
     @Column(length = 50, columnDefinition = "VARCHAR(50) DEFAULT 'куплений'")
