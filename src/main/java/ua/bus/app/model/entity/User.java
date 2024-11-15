@@ -32,6 +32,22 @@ public class User {
     private Role role;
 
     public enum Role {
-        CLIENT, PARTNER
+        CLIENT, PARTNER;
+
+        public static Role fromString(String role) {
+            if (role != null) {
+                for (Role r : Role.values()) {
+                    if (r.name().equalsIgnoreCase(role)) {
+                        return r;
+                    }
+                }
+            }
+            throw new IllegalArgumentException("Unexpected value: " + role);
+        }
+
+        // Convert enum to string
+        public String toString() {
+            return name();
+        }
     }
 }

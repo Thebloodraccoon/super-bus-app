@@ -138,11 +138,11 @@
                         <form action="/user/login" method="post">
                             <div class="mb-3">
                                 <label for="loginEmail" class="form-label">Електронна пошта</label>
-                                <input type="email" class="form-control" id="loginEmail" name="username" placeholder="Введіть електронну пошту" required>
+                                <input type="email" class="form-control" id="loginEmail" name="loginEmail" placeholder="Введіть електронну пошту" required>
                             </div>
                             <div class="mb-3">
                                 <label for="loginPassword" class="form-label">Пароль</label>
-                                <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Введіть пароль" required>
+                                <input type="password" class="form-control" id="loginPassword" name="loginPassword" placeholder="Введіть пароль" required>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Увійти</button>
                         </form>
@@ -166,27 +166,27 @@
                         <form id="registerForm" action="/user/register" method="post">
                             <div class="mb-3">
                                 <label for="registerName" class="form-label">Ім'я</label>
-                                <input type="text" class="form-control" id="registerName" name="username" placeholder="Введіть ваше ім'я" required>
+                                <input type="text" class="form-control" id="registerName" name="registerName" placeholder="Введіть ваше ім'я" required>
                                 <div class="invalid-feedback">Це поле обов'язкове.</div>
                             </div>
                             <div class="mb-3">
                                 <label for="registerEmail" class="form-label">Електронна пошта</label>
-                                <input type="email" class="form-control" id="registerEmail" name="email" placeholder="Введіть електронну пошту" required>
+                                <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder="Введіть електронну пошту" required>
                                 <div class="invalid-feedback">Будь ласка, введіть правильну електронну пошту.</div>
                             </div>
                             <div class="mb-3">
                                 <label for="registerPhone" class="form-label">Номер телефону</label>
-                                <input type="tel" class="form-control" id="registerPhone" name="phone" placeholder="Введіть номер телефону" required pattern="^\+?[0-9]{10,15}$">
+                                <input type="tel" class="form-control" id="registerPhone" name="registerPhone" placeholder="Введіть номер телефону" required pattern="^\+?[0-9]{10,15}$">
                                 <div class="invalid-feedback">Будь ласка, введіть дійсний номер телефону.</div>
                             </div>
                             <div class="mb-3">
                                 <label for="registerPassword" class="form-label">Пароль</label>
-                                <input type="password" class="form-control" id="registerPassword" name="password" placeholder="Введіть пароль" required minlength="6">
+                                <input type="password" class="form-control" id="registerPassword" name="registerPassword" placeholder="Введіть пароль" required minlength="6">
                                 <div class="invalid-feedback">Пароль має бути не менше 6 символів.</div>
                             </div>
                             <div class="mb-3">
                                 <label for="registerRole" class="form-label">Роль</label>
-                                <select class="form-select" id="registerRole" name="role" required>
+                                <select class="form-select" id="registerRole" name="registerRole" required>
                                     <option value="" disabled selected>Оберіть роль</option>
                                     <option value="user">Користувач</option>
                                     <option value="partner">Партнер</option>

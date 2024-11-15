@@ -11,7 +11,6 @@ import ua.bus.app.model.dto.LoginDTO;
 import ua.bus.app.model.dto.RegisterDTO;
 import ua.bus.app.model.entity.User;
 import ua.bus.app.repo.UserJpaRepo;
-import ua.bus.app.util.EncryptionUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +23,7 @@ public class AuthService {
 
             if (user == null) throw new UserNotFoundException("Invalid email");
 
-            String decryptedPassword = EncryptionUtil.decrypt(user.getPasswordHash());
+            String decryptedPassword = user.getPasswordHash();
 
             if (!decryptedPassword.equals(loginDTO.getPassword())) {
                 throw new InvalidPasswordException("Invalid password");
@@ -36,8 +35,7 @@ public class AuthService {
         }
     }
 
-    public Long registerUser(RegisterDTO registerDTO) throws PasswordEncryptionException {
-        try {
+    public Long registerUser(RegisterDTO registerDTO) throws UserAlreadyExistsException {
             User existed = userJpaRepo.findByEmail(registerDTO.getEmail());
 
             if (existed != null) throw new UserAlreadyExistsException("User already exists");
@@ -49,14 +47,11 @@ public class AuthService {
             user.setRole(User.Role.valueOf(registerDTO.getRole()));
 
             // Encrypt password before saving
-            String encryptedPassword = EncryptionUtil.encrypt(registerDTO.getPassword());
+            String encryptedPassword = registerDTO.getPassword();
             user.setPasswordHash(encryptedPassword);
 
             User saved = userJpaRepo.save(user);
 
             return saved.getId();
-        } catch (Exception e) {
-            throw new PasswordEncryptionException("Error encrypting password");
-        }
     }
 }
