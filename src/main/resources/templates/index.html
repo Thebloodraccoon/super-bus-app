@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Super Bus</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/css/styles.css">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
     </head>
     <body>
         <header>
@@ -26,9 +26,6 @@
                                     <a class="nav-link" href="#">Реєстрація</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Квитки</a>
-                                </li>
-                                <li class="nav-item">
                                     <a class="nav-link" href="#">Контакти</a>
                                 </li>
                             </ul>
@@ -40,27 +37,31 @@
 
         <main>
             <!-- Секція банера -->
-            <section class="jumbotron text-center my-5">
+            <section class="jumbotron text-center banner-section">
                 <div class="container">
-                    <h1 class="display-4">Зручні та комфортні поїздки з Super Bus</h1>
+                    <h1 class="display-4 text-primary">Зручні та комфортні поїздки з Super Bus</h1>
                     <p class="lead">Подорожуйте по найкращим маршрутам по всій Україні</p>
 
                     <!-- Форма для введення маршруту -->
-                    <form action="#" method="get" class="d-flex justify-content-center">
-                        <input type="text" class="form-control me-2" placeholder="Введіть маршрут" aria-label="Маршрут" required>
-                        <button class="btn btn-primary" type="submit">Знайти маршрут</button>
+                    <form action="#" method="get" class="d-flex justify-content-center search-form">
+                        <input type="text" name="from" placeholder="Звідки" class="form-control me-2">
+                        <input type="text" name="to" placeholder="Куди" class="form-control me-2">
+                        <input type="date" name="date" value="2024-11-14" class="form-control me-2">
+                        <input type="number" name="passengers" value="1" min="1" class="form-control me-2">
+                        <button type="submit" class="btn btn-success">🔍 Пошук</button>
                     </form>
                 </div>
             </section>
             <section class="container my-5">
-                <h2>Наші популярні маршрути</h2>
+                <h2 class="text-center mb-4 text-primary">Наші популярні маршрути</h2>
                 <div class="row">
-                    <div th:each="route : ${routes}" class="col-md-4">
-                        <div class="card">
-                            <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Маршрут">                            <div class="card-body">
+                    <div th:each="route : ${routes}" class="col-md-4 mb-4">
+                        <div class="card shadow-lg border-0 h-100 route-card">
+                            <img th:src="@{'/images/city/' + ${route.id}} + '.jpg'" class="card-img-top route-card-img" alt="Маршрут">
+                            <div class="card-body">
                                 <h5 th:text="${route.startLocation} + ' - ' + ${route.endLocation}" class="card-title"></h5>
-                                <p th:text="${route.description}" class="card-text"></p>
-                                <a th:href="route/${route.id}" class="btn btn-primary">Дізнатися більше</a>
+                                <p th:text="${route.description}" class="card-text text-muted"></p>
+                                <a th:href="@{'/route/' + ${route.id}}" class="btn btn-primary mt-3 route-card-btn">Дізнатися більше</a>
                             </div>
                         </div>
                     </div>
@@ -91,6 +92,32 @@
                 </div>
             </section>
 
+            <section class="contact-us text-center my-5 py-5">
+                <div class="container">
+                    <h2 class="display-4 mb-4 text-primary">Контакти</h2>
+                    <p class="lead text-muted mb-5">Ми завжди раді вашим запитанням та відгукам! Зв’яжіться з нами для отримання додаткової інформації або для планування вашої наступної подорожі з нами.</p>
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-4">
+                            <div class="card shadow-lg border-0 p-4">
+                                <h3 class="text-success mb-3">Наші контакти</h3>
+                                <p>Телефон: +380 123 456 789</p>
+                                <p>Email: support@superbus.ua</p>
+                                <p>Адреса: вул. Мала Арнаутська, 55, Одеса, Україна</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card shadow-lg border-0 p-4">
+                                <h3 class="text-info mb-3">Години роботи</h3>
+                                <p>Понеділок — П’ятниця: 9:00 — 18:00</p>
+                                <p>Субота: 10:00 — 15:00</p>
+                                <p>Неділя: вихідний</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
         </main>
 
@@ -103,5 +130,30 @@
         <!-- Підключаємо Bootstrap JS та Popper.js -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+        <script>
+            function fetchSuggestions(type) {
+                const input = document.getElementById(type + 'Location').value;
+                const suggestionsList = document.getElementById(type + 'Suggestions');
+                suggestionsList.innerHTML = ''; // Clear previous suggestions
+
+                // If input is empty, don't show suggestions
+                if (!input) return;
+
+                // Example cities, replace with dynamic data (AJAX call to backend)
+                const cities = ["Київ", "Львів", "Харків", "Одеса", "Дніпро", "Запоріжжя"];
+                const filteredCities = cities.filter(city => city.toLowerCase().includes(input.toLowerCase()));
+
+                filteredCities.forEach(city => {
+                    const li = document.createElement('li');
+                    li.textContent = city;
+                    li.onclick = function() {
+                        document.getElementById(type + 'Location').value = city;
+                        suggestionsList.innerHTML = ''; // Clear suggestions after selection
+                    };
+                    suggestionsList.appendChild(li);
+                });
+            }
+        </script>
     </body>
 </html>

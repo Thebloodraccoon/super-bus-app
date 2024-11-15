@@ -2,15 +2,14 @@ package ua.bus.app.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-import java.security.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Data
 @ToString
-@RequiredArgsConstructor
 @Entity(name = "Ticket")
 @Table(name = "t_ticket")
 public class Ticket {
@@ -27,7 +26,7 @@ public class Ticket {
     private Route route;
 
     @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp purchaseDate;
+    private LocalDateTime purchaseDate;
 
     @Column(length = 50, columnDefinition = "VARCHAR(50) DEFAULT 'куплений'")
     private String status = "куплений";

@@ -1,0 +1,125 @@
+/* Секция баннера */
+.banner-section {
+    background-image: url('/images/bus.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #fff;
+    padding: 200px 0;
+
+    margin-bottom: 3rem; /* Задайте бажане значення */
+           margin-top: 0;
+}
+
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+.card-img {
+    transition: transform 0.3s ease;
+}
+.card:hover .route-card-img {
+    transform: scale(1.05);
+}
+.card-btn {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.card-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.search-form {
+        background-color: rgba(255, 255, 255, 0.8); /* Світлий фон з легким прозорим ефектом */
+        padding: 10px 20px;
+        border-radius: 25px; /* Закруглені краї */
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Тінь для об'єму */
+    }
+
+    .search-form input[type="text"],
+    .search-form input[type="date"],
+    .search-form input[type="number"] {
+        border: none;
+        border-radius: 20px; /* Закруглені краї для полів */
+        padding: 10px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Тінь для полів */
+        font-size: 1rem;
+    }
+
+    .search-form input[type="text"]:focus,
+    .search-form input[type="date"]:focus,
+    .search-form input[type="number"]:focus {
+        outline: none; /* Прибираємо рамку при фокусі */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Посилена тінь при фокусі */
+    }
+
+    .search-form button {
+        border-radius: 20px; /* Закруглені краї кнопки */
+        padding: 10px 20px;
+        font-size: 1rem;
+        background-color: #4CAF50; /* Колір кнопки */
+        color: white;
+        border: none;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Тінь для кнопки */
+    }
+
+    .search-form button:hover {
+        background-color: #45a049; /* Темніший колір при наведенні */
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Посилена тінь при наведенні */
+}
+
+header {
+        background-color: rgba(255, 255, 255, 0.9); /* Білий фон з легким прозорим ефектом */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легка тінь */
+        position: sticky; /* Фіксоване положення при прокручуванні */
+        top: 0;
+        z-index: 1000;
+    }
+
+    /* Стилі для навігаційного меню */
+    .navbar {
+        padding: 1rem 1.5rem; /* Відступи для навігації */
+    }
+
+    .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #4CAF50; /* Основний колір бренду */
+    }
+
+    .navbar-brand:hover {
+        color: #45a049; /* Темніший колір при наведенні */
+    }
+
+    /* Стилі для навігаційних посилань */
+    .navbar-nav .nav-link {
+        color: #333; /* Темний текст */
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        transition: color 0.3s, background-color 0.3s; /* Плавний перехід кольорів */
+        border-radius: 20px; /* Закруглені краї для посилань */
+    }
+
+    .navbar-nav .nav-link:hover {
+        color: #ffffff; /* Білий текст при наведенні */
+        background-color: #4CAF50; /* Основний колір фону при наведенні */
+    }
+
+    /* Стилі для мобільної версії (кнопка-бургер) */
+    .navbar-toggler {
+        border-color: #4CAF50; /* Колір кнопки-бургер */
+    }
+
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%2848, 121, 53, 1%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"); /* Іконка бургер */
+    }

@@ -7,8 +7,6 @@ import lombok.ToString;
 
 import java.util.List;
 
-
-
 @Data
 @ToString
 @RequiredArgsConstructor
@@ -17,18 +15,19 @@ import java.util.List;
 public class Route {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "startLocation", nullable = false)
     private String startLocation;
 
-    @Column(nullable = false)
+    @Column(name = "endLocation", nullable = false)
     private String endLocation;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "price", nullable = false)
     private Long price;
 
     @ManyToOne

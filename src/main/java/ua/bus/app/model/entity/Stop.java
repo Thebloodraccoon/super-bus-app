@@ -5,8 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-import java.security.Timestamp;
-
+import java.time.LocalDateTime;
 
 
 @Data
@@ -26,7 +25,7 @@ public class Stop {
     @Column(nullable = false)
     private String locationName;
 
-    private Timestamp arrivalTime;
+    private LocalDateTime arrivalTime;
 
-    private Timestamp departureTime;
+    private LocalDateTime departureTime;
 }
