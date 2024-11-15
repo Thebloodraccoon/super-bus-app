@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import ua.bus.app.model.dto.RouteDTO;
 import ua.bus.app.model.dto.RouteItemDTO;
 import ua.bus.app.model.entity.Route;
+import ua.bus.app.service.AuthService;
 import ua.bus.app.service.RouteService;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeController {
     private final RouteService routeService;
+    private final AuthService authService;
 
     @GetMapping
     public String home(@NotNull Model model) {
