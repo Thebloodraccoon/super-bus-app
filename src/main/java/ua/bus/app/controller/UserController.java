@@ -2,15 +2,18 @@ package ua.bus.app.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ua.bus.app.exception.UserAlreadyExistsException;
 import ua.bus.app.exception.UserNotFoundException;
-import ua.bus.app.model.dto.RegisterDTO;
-import ua.bus.app.model.dto.UserDTO;
-import ua.bus.app.model.entity.User;
+import ua.bus.app.model.dto.*;
+import ua.bus.app.service.RouteService;
+import ua.bus.app.service.TicketService;
 import ua.bus.app.service.UserService;
 import org.springframework.ui.Model;
+
+import java.util.List;
 
 
 @Controller
@@ -18,11 +21,34 @@ import org.springframework.ui.Model;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final RouteService routeService;
+    private final TicketService ticketService;
 
     @GetMapping("/client/{id}")
     public String showClientProfile(@PathVariable("id") Long id, Model model) throws UserNotFoundException {
         UserDTO userById = userService.getUserById(id);
         model.addAttribute("user", userById);
+
+        List<TicketDTO> tickets = ticketService.findByUserId(id);
+        model.addAttribute("tickets", tickets);
+        return "client-profile";
+    }
+
+    @GetMapping("/client/{id}/routes")
+    public String showRoutesForClient(@PathVariable("id") Long id,
+                                      @RequestParam(name = "from", required = false) String from,
+                                      @RequestParam(name = "to", required = false) String to,
+                                    Model model) throws UserNotFoundException {
+        UserDTO userById = userService.getUserById(id);
+        model.addAttribute("user", userById);
+
+        Pageable pageable = PageRequest.of(0, 20);
+        List<RouteDTO> routes = routeService.findRoutesLocation(from, to, pageable);
+
+        model.addAttribute("routes", routes);
+
+        List<TicketDTO> tickets = ticketService.findByUserId(id);
+        model.addAttribute("tickets", tickets);
 
         return "client-profile";
     }
@@ -56,9 +82,13 @@ public class UserController {
     }
 
     @PostMapping("/delete/{id}")
-    public String userDelete(@PathVariable("id") Long id) throws UserNotFoundException {
+    public String userDelete(@PathVariable("id") Long id, Model model) throws UserNotFoundException {
         userService.deleteUser(id);
 
-        return "redirect:/";
+        Pageable pageable = PageRequest.of(0, 6);
+        List<RouteItemDTO> routes = routeService.getRoutes(pageable);
+
+        model.addAttribute("routes", routes);
+        return "index";
     }
 }

@@ -16,5 +16,5 @@ public class TicketDTO {
     private LocalDateTime purchaseDate;
     private String status;
     private Integer seats;
-    private Integer durationHours;
+    private Double price;
 }

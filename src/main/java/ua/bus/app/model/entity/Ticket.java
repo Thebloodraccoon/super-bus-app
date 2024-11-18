@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Data
@@ -35,5 +35,7 @@ public class Ticket {
     private Integer seats;
 
     @Column(nullable = false)
-    private Integer durationHours;
+    private Double price;
+
+
 }
