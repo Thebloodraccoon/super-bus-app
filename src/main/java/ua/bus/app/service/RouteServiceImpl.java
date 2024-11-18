@@ -13,6 +13,7 @@ import ua.bus.app.model.mapper.RouteMapper;
 import ua.bus.app.repo.RouteJpaRepo;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -72,8 +73,26 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public Page<RouteDTO> findRoutesByStartLocation(String startLocation, Pageable pageable) {
-        Page<Route> routePage = routeRepo.findByStartLocationContaining(startLocation, pageable);
-        return routePage.map(routeMapper::toRouteDTO);
+    public List<RouteDTO> findRoutesLocation(String startLocation, String endLocation, Pageable pageable) {
+        if ((startLocation == null || startLocation.isEmpty()) && (endLocation == null || endLocation.isEmpty())) {
+            return routeRepo.findAll(pageable).stream()
+                    .map(routeMapper::toRouteDTO)
+                    .collect(Collectors.toList());
+        }
+        if (startLocation != null && !startLocation.isEmpty() && endLocation != null && !endLocation.isEmpty()) {
+            return routeRepo.findByStartLocationAndEndLocation(startLocation, endLocation, pageable).stream()
+                    .map(routeMapper::toRouteDTO)
+                    .collect(Collectors.toList());
+        }
+
+        if (endLocation != null && !endLocation.isEmpty()) {
+            return routeRepo.findByEndLocation(endLocation, pageable).stream()
+                    .map(routeMapper::toRouteDTO)
+                    .collect(Collectors.toList());
+        }
+
+        return routeRepo.findByStartLocation(startLocation, pageable).stream()
+                .map(routeMapper::toRouteDTO)
+                .collect(Collectors.toList());
     }
 }

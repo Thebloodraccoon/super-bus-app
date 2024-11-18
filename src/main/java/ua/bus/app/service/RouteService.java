@@ -15,5 +15,5 @@ public interface RouteService {
 
     List<RouteItemDTO> getAllRoutes();
     List<RouteItemDTO> getRoutes(Pageable pageable);
-    Page<RouteDTO> findRoutesByStartLocation(String startLocation, Pageable pageable);
+    List<RouteDTO> findRoutesLocation(String startLocation, String endLocation, Pageable pageable);
 }

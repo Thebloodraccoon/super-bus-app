@@ -43,15 +43,14 @@
                     <p class="lead">Подорожуйте по найкращим маршрутам по всій Україні</p>
 
                     <!-- Форма для введення маршруту -->
-                    <form action="#" method="get" class="d-flex justify-content-center search-form">
-                        <input type="text" name="from" placeholder="Звідки" class="form-control me-2">
-                        <input type="text" name="to" placeholder="Куди" class="form-control me-2">
-                        <input type="date" name="date" value="2024-11-14" class="form-control me-2">
-                        <input type="number" name="passengers" value="1" min="1" class="form-control me-2">
+                    <form action="/routes" method="get" class="d-flex justify-content-center search-form">
+                        <input type="text" id="from" name="from"  placeholder="Звідки" class="form-control me-2">
+                        <input type="text" id="to" name="to" placeholder="Куди" class="form-control me-2">
                         <button type="submit" class="btn btn-success">🔍 Пошук</button>
                     </form>
                 </div>
             </section>
+
             <section class="container my-5">
                 <h2 class="text-center mb-4 text-primary">Наші популярні маршрути</h2>
                 <div class="row">

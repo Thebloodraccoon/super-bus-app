@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS t_ticket (
     purchase_date DATETIME,
     status VARCHAR(50) DEFAULT 'куплений',
     seats INT NOT NULL,
-    duration_hours INT NOT NULL,
+    price INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES t_user(id) ON DELETE CASCADE,
     FOREIGN KEY (route_id) REFERENCES t_route(id) ON DELETE CASCADE
 );

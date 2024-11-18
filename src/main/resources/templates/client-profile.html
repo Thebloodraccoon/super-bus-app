@@ -64,9 +64,6 @@
                         </div>
                         <div class="container-fluid mt-4">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#">
-                                    Купити квиток
-                                </a>
                                 <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">
                                     Редагувати профіль
                                 </button>
@@ -80,6 +77,71 @@
                     </div>
                 </div>
             </section>
+
+            <section class="container my-5">
+                <h2 class="text-center mb-4 text-primary">Ваші квитки</h2>
+                <div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4" th:each="ticket : ${tickets}">
+                            <div class="card shadow-lg border-0 h-100">
+                                <div class="card-body">
+<!--                                    <h5 class="card-title text-primary" th:text="${ticket.routeDTO.startLocation} + ' - ' + ${ticket.routeDTO.endLocation}"></h5>-->
+                                    <p class="text-muted" th:text="'Дата покупки: ' + ${ticket.purchaseDate}"></p>
+                                    <p class="text-muted" th:text="'Місця: ' + ${ticket.seats}"></p>
+                                    <p class="text-muted" th:text="'Ціна: ' + ${ticket.price} + ' грн'"></p>
+                                    <p class="text-muted" th:text="'Статус: ' + ${ticket.status}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="jumbotron text-center">
+                <div class="container">
+                    <h1 class="display-4 text-primary">Знайдіть потрібний вам маршрут</h1>
+                    <form th:action="@{'/user/client/' + ${user.id}} + '/routes'" method="get" class="d-flex justify-content-center search-form">
+                        <input type="text" id="from" name="from"  placeholder="Звідки" class="form-control me-2">
+                        <input type="text" id="to" name="to" placeholder="Куди" class="form-control me-2">
+                        <button type="submit" class="btn btn-success">🔍 Пошук</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="container my-5">
+                <div class="row">
+                    <div th:each="route : ${routes}" class="col-lg-6 mb-4">
+                        <div class="card shadow-lg border-0">
+                            <div class="card-body">
+                                <h4 class="card-title text-primary">
+                                    <span th:text="${route.startLocation}"></span> - <span th:text="${route.endLocation}"></span>
+                                </h4>
+                                <p class="card-text text-muted" th:text="${route.description}"></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-primary text-white" th:text="'Ціна: ' + ${route.price} + ' грн'"></span>
+                                </div>
+                                <hr>
+                                <h6 class="text-secondary">Зупинки:</h6>
+                                <ul class="list-unstyled">
+                                    <li th:each="stop : ${route.stops}" class="mb-2">
+                                        <strong th:text="${stop.locationName}"></strong>
+                                        <span class="text-muted" th:text="'Прибуття: ' + ${stop.arrivalTime.toLocalTime()}"></span> -
+                                        <span class="text-muted" th:text="'Відправлення: ' + ${stop.departureTime.toLocalTime()}"></span>
+                                    </li>
+                                </ul>
+                                <button
+                                        type="button"
+                                        class="btn btn-primary mt-3"
+                                        data-bs-toggle="modal"
+                                        th:attr="data-bs-target='#modal-' + ${route.id}">
+                                    Купити
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Edit Profile Modal -->
             <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -108,6 +170,67 @@
                     </div>
                 </div>
             </div>
+
+            <div th:each="route : ${routes}">
+                <div th:id="'modal-' + ${route.id}" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" th:text="'Купівля квитків: ' + ${route.startLocation} + ' - ' + ${route.endLocation}"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{'/user/client/' + ${user.id}}" method="post">
+                                    <input type="hidden" th:value="${route.id}" name="routeId">
+                                    <div class="mb-3">
+                                        <label for="purchaseDate" class="form-label">Дата подорожі</label>
+                                        <input
+                                                type="date"
+                                                class="form-control"
+                                                id="purchaseDate"
+                                                name="purchaseDate"
+                                                required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="seats" class="form-label">Кількість місць</label>
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                id="seats"
+                                                name="seats"
+                                                min="1"
+                                                value="1"
+                                                th:attr="data-price=${route.price}"
+                                                oninput="updatePrice(this)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="price" class="form-label">Загальна ціна</label>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="price"
+                                                name="price"
+                                                readonly
+                                                th:value="${route.price}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Зупинки на маршруті:</label>
+                                        <ul class="list-group">
+                                            <li th:each="stop : ${route.stops}" class="list-group-item">
+                                                <strong th:text="${stop.locationName}"></strong>
+                                                <span th:text="'Прибуття: ' + ${#temporals.format(stop.arrivalTime, 'yyyy-MM-dd HH:mm')}"></span>
+                                                <span th:text="' | Відправлення: ' + ${#temporals.format(stop.departureTime, 'yyyy-MM-dd HH:mm')}"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-success">Підтвердити покупку</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <footer class="bg-light py-4">
@@ -119,5 +242,15 @@
         <!-- Підключаємо Bootstrap JS та Popper.js -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+        <script>
+            function updatePrice(inputElement) {
+                const seats = parseInt(inputElement.value, 10) || 1; // Отримуємо кількість місць
+                const basePrice = parseFloat(inputElement.getAttribute('data-price')); // Базова ціна маршруту
+                const totalPrice = seats * basePrice; // Розраховуємо загальну ціну
+                const priceInput = inputElement.closest('.modal-body').querySelector('#price'); // Знаходимо поле "Загальна ціна"
+                priceInput.value = totalPrice.toFixed(2); // Оновлюємо значення
+            }
+        </script>
     </body>
 </html>
