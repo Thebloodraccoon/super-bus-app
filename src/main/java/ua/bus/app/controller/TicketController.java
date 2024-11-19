@@ -29,12 +29,14 @@ public class TicketController {
     public String buyTicket(
             @PathVariable("id") Long userById,
             @RequestParam("routeId") Long routeId,
+            @RequestParam("routeName") String routeName,
             @RequestParam("purchaseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate purchaseDate,
             @RequestParam("price") Double price,
             @RequestParam("seats") Integer seats,
             Model model) throws UserNotFoundException {
 
         TicketDTO ticket = new TicketDTO();
+        ticket.setRouteName(routeName);
         ticket.setSeats(seats);
         ticket.setStatus("куплений");
         ticket.setPurchaseDate(purchaseDate.atStartOfDay());

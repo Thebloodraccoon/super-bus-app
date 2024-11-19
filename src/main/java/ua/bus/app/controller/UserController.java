@@ -13,6 +13,7 @@ import ua.bus.app.service.TicketService;
 import ua.bus.app.service.UserService;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -58,6 +59,9 @@ public class UserController {
         UserDTO userById = userService.getUserById(id);
         model.addAttribute("user", userById);
 
+        List<RouteDTO> routes = routeService.findByPartner(id);
+        model.addAttribute("routes", routes);
+
         return "partner-profile";
     }
 
@@ -80,6 +84,8 @@ public class UserController {
 
         return "redirect:/user/client/" + updateUser.getId();
     }
+
+
 
     @PostMapping("/delete/{id}")
     public String userDelete(@PathVariable("id") Long id, Model model) throws UserNotFoundException {

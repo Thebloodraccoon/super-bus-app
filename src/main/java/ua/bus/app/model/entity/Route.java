@@ -8,7 +8,7 @@ import lombok.ToString;
 import java.util.List;
 
 @Data
-@ToString
+@ToString(exclude = "stops")
 @RequiredArgsConstructor
 @Entity(name = "Route")
 @Table(name = "t_route")

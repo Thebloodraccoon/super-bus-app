@@ -60,13 +60,12 @@
                             <div class="card-body">
                                 <h5 th:text="${route.startLocation} + ' - ' + ${route.endLocation}" class="card-title"></h5>
                                 <p th:text="${route.description}" class="card-text text-muted"></p>
-                                <a th:href="@{'/route/' + ${route.id}}" class="btn btn-primary mt-3 route-card-btn">Дізнатися більше</a>
+                                <a href="/" class="btn btn-primary mt-3 route-card-btn">Дізнатися більше</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-
 
             <section class="our-mission-vision text-center my-5 py-5 bg-light">
                 <div class="container">
@@ -117,7 +116,6 @@
                     </div>
                 </div>
             </section>
-
         </main>
 
         <footer class="bg-light py-4">
@@ -152,7 +150,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Реєстрація Modal -->
         <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -207,5 +204,6 @@
         <!-- Підключаємо Bootstrap JS та Popper.js -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
     </body>
 </html>

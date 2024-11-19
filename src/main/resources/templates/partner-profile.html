@@ -80,40 +80,37 @@
 
                     </div>
                 </div>
-
             </section>
 
-            <div class="modal fade" id="createRouteModal" tabindex="-1" aria-labelledby="createRouteModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="createRouteModalLabel">Створити маршрут</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form th:action="@{/route/create}" method="post">
-                                <div class="mb-3">
-                                    <label for="startLocation" class="form-label">Початкова точка</label>
-                                    <input type="text" class="form-control" id="startLocation" name="startLocation" required>
+            <section class="container my-5">
+                <h3 class="text-center mb-4 text-primary">Ваші маршрути</h3>
+                <div class="row">
+                    <div th:if="${routes.size() == 0}" class="text-center text-muted col-12">
+                        <p>Маршрути відсутні.</p>
+                    </div>
+                    <div th:each="route : ${routes}" class="col-md-4 col-sm-6 col-12 mb-4">
+                        <div class="card shadow-lg border-0 h-100">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary" th:text="'Маршрут: ' + ${route.startLocation} + ' ➝ ' + ${route.endLocation}"></h5>
+                                <p class="card-text"><strong>Опис:</strong> <span th:text="${route.description}"></span></p>
+                                <p class="card-text"><strong>Ціна:</strong> <span th:text="${route.price} + ' грн'"></span></p>
+                                <div class="d-flex justify-content-between">
+                                    <form th:action="@{'/user/delete/route/' + ${route.id}}"  method="post">
+                                        <input type="hidden" name="userId" th:value="${user.id}"/>
+                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Ви впевнені, що хочете видалити цей маршрут?');">
+                                            Видалити
+                                        </button>
+                                    </form>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="endLocation" class="form-label">Кінцева точка</label>
-                                    <input type="text" class="form-control" id="endLocation" name="endLocation" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="description" class="form-label">Опис</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="price" class="form-label">Ціна (грн)</label>
-                                    <input type="number" class="form-control" id="price" name="price" required>
-                                </div>
-                                <button type="submit" class="btn btn-success w-100">Створити маршрут</button>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
+
+
+
             <!-- Edit Profile Modal -->
             <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -143,7 +140,38 @@
                 </div>
             </div>
 
-
+            <div class="modal fade" id="createRouteModal" tabindex="-1" aria-labelledby="createRouteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createRouteModalLabel">Створити новий маршрут</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{'/user/create/' + ${user.id}}"  method="post">
+                                <!-- Основні дані маршруту -->
+                                <div class="mb-3">
+                                    <label for="startLocation" class="form-label">Початкове місце</label>
+                                    <input type="text" class="form-control" id="startLocation" name="startLocation" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="endLocation" class="form-label">Кінцеве місце</label>
+                                    <input type="text" class="form-control" id="endLocation" name="endLocation" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Опис</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Ціна</label>
+                                    <input type="number" class="form-control" id="price" name="price" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Створити маршрут</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <footer class="bg-light py-4">
