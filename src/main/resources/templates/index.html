@@ -43,9 +43,9 @@
                     <p class="lead">Подорожуйте по найкращим маршрутам по всій Україні</p>
 
                     <!-- Форма для введення маршруту -->
-                    <form action="/routes" method="get" class="d-flex justify-content-center search-form">
-                        <input type="text" id="from" name="from"  placeholder="Звідки" class="form-control me-2">
-                        <input type="text" id="to" name="to" placeholder="Куди" class="form-control me-2">
+                    <form id="searchForm" action="/routes" method="get" class="d-flex justify-content-center search-form">
+                        <input type="text" id="from" name="from" placeholder="Звідки" class="form-control me-2" >
+                        <input type="text" id="to" name="to" placeholder="Куди" class="form-control me-2" >
                         <button type="submit" class="btn btn-success">🔍 Пошук</button>
                     </form>
                 </div>
@@ -205,5 +205,114 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
+        <script>
+            // Функція для обрізки пробілів в полях форми
+            function trimInputFields(form) {
+                const inputs = form.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    if (input.value) {
+                        input.value = input.value.trim();
+                    }
+                });
+            }
+
+            // Функція для валідації форм
+            function validateForm(form) {
+                let valid = true;
+
+                // Перевірка на обов'язкові поля
+                const inputs = form.querySelectorAll('input[required], select[required]');
+                inputs.forEach(input => {
+                    if (input.value.trim() === "") {
+                        valid = false;
+                        input.classList.add("is-invalid");
+                        input.nextElementSibling.textContent = "Це поле обов'язкове.";
+                    } else {
+                        input.classList.remove("is-invalid");
+                    }
+                });
+
+                // Перевірка електронної пошти
+                const email = form.querySelector("#registerEmail");
+                if (email && !/\S+@\S+\.\S+/.test(email.value)) {
+                    valid = false;
+                    email.classList.add("is-invalid");
+                    email.nextElementSibling.textContent = "Будь ласка, введіть правильну електронну пошту.";
+                }
+
+                // Перевірка телефону
+                const phone = form.querySelector("#registerPhone");
+                if (phone && !/^\+?[0-9]{10,15}$/.test(phone.value)) {
+                    valid = false;
+                    phone.classList.add("is-invalid");
+                    phone.nextElementSibling.textContent = "Будь ласка, введіть дійсний номер телефону.";
+                }
+
+                // Перевірка паролю
+                const password = form.querySelector("#registerPassword");
+                if (password && password.value.length < 6) {
+                    valid = false;
+                    password.classList.add("is-invalid");
+                    password.nextElementSibling.textContent = "Пароль має бути не менше 6 символів.";
+                }
+
+                return valid;
+            }
+
+            // Обробник події для форми реєстрації
+            document.getElementById('registerForm').addEventListener('submit', function(event) {
+                trimInputFields(this);
+                if (!validateForm(this)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            });
+
+            // Обробник події для форми входу
+            document.getElementById('loginForm').addEventListener('submit', function(event) {
+                trimInputFields(this);
+                if (!validateForm(this)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            });
+        </script>
+        <script>
+            document.getElementById('searchForm').addEventListener('submit', function(event) {
+                let valid = true;
+
+                // Перевірка поля "Звідки" і обробка пробілів
+                const fromField = document.getElementById('from');
+                const fromFeedback = document.getElementById('fromFeedback');
+                fromField.value = fromField.value.trim(); // Обрізаємо зайві пробіли
+                if (fromField.value === "") {
+                    valid = false;
+                    fromField.classList.add("is-invalid");
+                    fromFeedback.style.display = 'block'; // Показуємо повідомлення про помилку
+                } else {
+                    fromField.classList.remove("is-invalid");
+                    fromFeedback.style.display = 'none'; // Приховуємо повідомлення
+                }
+
+                // Перевірка поля "Куди" і обробка пробілів
+                const toField = document.getElementById('to');
+                const toFeedback = document.getElementById('toFeedback');
+                toField.value = toField.value.trim(); // Обрізаємо зайві пробіли
+                if (toField.value === "") {
+                    valid = false;
+                    toField.classList.add("is-invalid");
+                    toFeedback.style.display = 'block'; // Показуємо повідомлення про помилку
+                } else {
+                    toField.classList.remove("is-invalid");
+                    toFeedback.style.display = 'none'; // Приховуємо повідомлення
+                }
+
+                // Якщо хоча б одне поле некоректне, блокуємо відправку форми
+                if (!valid) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            });
+        </script>
     </body>
 </html>

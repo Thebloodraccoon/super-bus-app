@@ -148,23 +148,27 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form th:action="@{'/user/create/' + ${user.id}}"  method="post">
+                            <form id="createRouteForm" th:action="@{'/user/create/' + ${user.id}}" method="post">
                                 <!-- Основні дані маршруту -->
                                 <div class="mb-3">
                                     <label for="startLocation" class="form-label">Початкове місце</label>
                                     <input type="text" class="form-control" id="startLocation" name="startLocation" required>
+                                    <div class="invalid-feedback">Будь ласка, введіть початкове місце.</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="endLocation" class="form-label">Кінцеве місце</label>
                                     <input type="text" class="form-control" id="endLocation" name="endLocation" required>
+                                    <div class="invalid-feedback">Будь ласка, введіть кінцеве місце.</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Опис</label>
                                     <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                                    <div class="invalid-feedback">Будь ласка, введіть опис маршруту.</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="price" class="form-label">Ціна</label>
-                                    <input type="number" class="form-control" id="price" name="price" required>
+                                    <input type="number" class="form-control" id="price" name="price" required min="1">
+                                    <div class="invalid-feedback">Ціна повинна бути більше 0.</div>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Створити маршрут</button>
                             </form>
@@ -183,5 +187,53 @@
         <!-- Підключаємо Bootstrap JS та Popper.js -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+        <!-- Скрипт для валідації -->
+        <script>
+            // Функція для обрізки пробілів в полях форми
+            function trimInputFields(form) {
+                const inputs = form.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    if (input.value) {
+                        input.value = input.value.trim();
+                    }
+                });
+            }
+
+            // Функція для валідації форми
+            function validateForm(form) {
+                let valid = true;
+
+                // Перевірка на обов'язкові поля
+                const inputs = form.querySelectorAll('input[required], textarea[required]');
+                inputs.forEach(input => {
+                    if (input.value.trim() === "") {
+                        valid = false;
+                        input.classList.add("is-invalid");
+                        input.nextElementSibling.textContent = "Це поле обов'язкове.";
+                    } else {
+                        input.classList.remove("is-invalid");
+                    }
+                });
+
+                // Перевірка ціни (повинна бути більше 0)
+                const price = form.querySelector("#price");
+                if (price && price.value <= 0) {
+                    valid = false;
+                    price.classList.add("is-invalid");
+                    price.nextElementSibling.textContent = "Ціна повинна бути більше 0.";
+                }
+
+                return valid;
+            }
+
+            // Обробник події для форми
+            document.getElementById('createRouteForm').addEventListener('submit', function(event) {
+                trimInputFields(this);
+                if (!validateForm(this)) {
+                    event.preventDefault(); // Блокуємо відправку форми
+                    event.stopPropagation(); // Перешкоджаємо подальшій обробці
+                }
+            });
+        </script>
     </body>
 </html>
