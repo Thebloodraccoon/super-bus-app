@@ -27,26 +27,40 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketDTO save(TicketDTO ticketDTO, Long userId, Long routeId) throws UserNotFoundException {
-        User user = userJpaRepo.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-        Route route = routeJpaRepo.findById(routeId)
-                .orElseThrow(() -> new EntityNotFoundException("Route with ID " + routeId + " not found"));
+        User user = findUserById(userId);
+        Route route = findRouteById(routeId);
 
         Ticket ticket = ticketMapper.toTicket(ticketDTO);
+        assignRelationsToTicket(ticket, user, route);
 
-        ticket.setUser(user);
-        ticket.setRoute(route);
-
-        Ticket save = ticketJpaRepo.save(ticket);
-
-        return ticketMapper.toTicketDTO(save);
+        Ticket savedTicket = ticketJpaRepo.save(ticket);
+        return ticketMapper.toTicketDTO(savedTicket);
     }
 
     @Override
     public List<TicketDTO> findByUserId(Long userId) {
-        List<Ticket> byUserId = ticketJpaRepo.findByUserId(userId);
+        List<Ticket> tickets = ticketJpaRepo.findByUserId(userId);
+        return mapTicketsToDTOs(tickets);
+    }
 
-        return byUserId.stream()
+    // Extracted methods for modularity and readability
+    private User findUserById(Long userId) throws UserNotFoundException {
+        return userJpaRepo.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
+
+    private Route findRouteById(Long routeId) {
+        return routeJpaRepo.findById(routeId)
+                .orElseThrow(() -> new EntityNotFoundException("Route with ID " + routeId + " not found"));
+    }
+
+    private void assignRelationsToTicket(Ticket ticket, User user, Route route) {
+        ticket.setUser(user);
+        ticket.setRoute(route);
+    }
+
+    private List<TicketDTO> mapTicketsToDTOs(List<Ticket> tickets) {
+        return tickets.stream()
                 .map(ticketMapper::toTicketDTO)
                 .toList();
     }

@@ -7,8 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ua.bus.app.exception.InvalidPasswordException;
 import ua.bus.app.exception.PasswordEncryptionException;
 import ua.bus.app.exception.UserAlreadyExistsException;
+import ua.bus.app.exception.UserNotFoundException;
 import ua.bus.app.model.dto.LoginDTO;
 import ua.bus.app.model.dto.RegisterDTO;
 import ua.bus.app.model.entity.User;
@@ -24,7 +26,7 @@ public class AuthController {
     @PostMapping("/user/login")
     public String handleLogin(@RequestParam String loginEmail,
                               @RequestParam String loginPassword,
-                              Model model) throws PasswordEncryptionException {
+                              Model model) throws PasswordEncryptionException, UserNotFoundException, InvalidPasswordException {
         LoginDTO loginDTO = new LoginDTO(loginEmail, loginPassword);
         User user = authService.loginUser(loginDTO);
 
