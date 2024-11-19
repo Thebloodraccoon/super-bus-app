@@ -1,11 +1,9 @@
 package ua.bus.app.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.bus.app.exception.UserNotFoundException;
-import ua.bus.app.model.dto.RegisterDTO;
 import ua.bus.app.model.dto.UserDTO;
 import ua.bus.app.model.entity.User;
 import ua.bus.app.model.mapper.UserMapper;
@@ -23,15 +21,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         User user = userMapper.toUser(userDTO);
-        User save = userJpaRepo.save(user);
-
-        return userMapper.toUserDTO(save);
+        return saveAndMapToDTO(user);
     }
 
     @Override
     public UserDTO getUserById(Long id) throws UserNotFoundException {
-        User user = userJpaRepo.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = findUserById(id); // Extract Method
         return userMapper.toUserDTO(user);
     }
 
@@ -39,27 +34,42 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> getAllUsers() {
         return userJpaRepo.findAll().stream()
                 .map(userMapper::toUserDTO)
-                .toList();
+                .toList(); // Simplified stream
     }
 
     @Override
     public UserDTO updateUser(Long id, UserDTO userDTO) throws UserNotFoundException {
-        User user = userJpaRepo.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setPhone(userDTO.getPhone());
-
-        User updatedUser = userJpaRepo.save(user);
-        return userMapper.toUserDTO(updatedUser);
+        User user = findUserById(id); // Extract Method
+        updateUserFields(user, userDTO); // Extract Method
+        return saveAndMapToDTO(user);
     }
 
     @Override
     public void deleteUser(Long id) throws UserNotFoundException {
+        validateUserExistence(id); // Extract Method
+        userJpaRepo.deleteById(id);
+    }
+
+    // --- Приватні методи для рефакторингу ---
+    private User findUserById(Long id) throws UserNotFoundException {
+        return userJpaRepo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
+    }
+
+    private void validateUserExistence(Long id) throws UserNotFoundException {
         if (!userJpaRepo.existsById(id)) {
             throw new UserNotFoundException("User not found with ID: " + id);
         }
-        userJpaRepo.deleteById(id);
+    }
+
+    private void updateUserFields(User user, UserDTO userDTO) {
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setPhone(userDTO.getPhone());
+    }
+
+    private UserDTO saveAndMapToDTO(User user) {
+        User savedUser = userJpaRepo.save(user);
+        return userMapper.toUserDTO(savedUser);
     }
 }

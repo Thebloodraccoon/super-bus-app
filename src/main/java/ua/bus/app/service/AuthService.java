@@ -18,42 +18,53 @@ import ua.bus.app.repo.UserJpaRepo;
 public class AuthService {
     private final UserJpaRepo userJpaRepo;
 
-    public User loginUser(LoginDTO loginDTO) throws PasswordEncryptionException {
+    public User loginUser(LoginDTO loginDTO) throws PasswordEncryptionException, InvalidPasswordException, UserNotFoundException {
         try {
-            User user = userJpaRepo.findByEmail(loginDTO.getEmail());
+            User user = findUserByEmail(loginDTO.getEmail()); // Extract Method
 
-            if (user == null) throw new UserNotFoundException("Invalid email");
-
-            String decryptedPassword = user.getPasswordHash();
-
-            if (!decryptedPassword.equals(loginDTO.getPassword())) {
-                throw new InvalidPasswordException("Invalid password");
-            }
+            validatePassword(loginDTO.getPassword(), user.getPasswordHash()); // Extract Method
 
             return user;
+        } catch (InvalidPasswordException | UserNotFoundException e) {
+            throw e;
         } catch (Exception e) {
-            throw new PasswordEncryptionException("Error decrypting password");
+            throw new PasswordEncryptionException("Error decrypting password", e); // Покращено виняток
         }
     }
 
     public User registerUser(RegisterDTO registerDTO) throws UserAlreadyExistsException {
-            User existed = userJpaRepo.findByEmail(registerDTO.getEmail());
+        if (isUserExists(registerDTO.getEmail())) { // Replace Temp with Query
+            throw new UserAlreadyExistsException("User already exists");
+        }
 
-            if (existed != null) throw new UserAlreadyExistsException("User already exists");
+        User user = mapRegisterDTOToUser(registerDTO); // Extract Method
+        return userJpaRepo.save(user);
+    }
 
-            User user = new User();
-            user.setEmail(registerDTO.getEmail());
-            user.setName(registerDTO.getName());
-            user.setPhone(registerDTO.getPhone());
 
-            Role role = Role.fromString(registerDTO.getRole());
-            user.setRole(role);
+    private User findUserByEmail(String email) throws UserNotFoundException {
+        return userJpaRepo.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Invalid email"));
+    }
 
-            String encryptedPassword = registerDTO.getPassword();
-            user.setPasswordHash(registerDTO.getPassword());
+    private void validatePassword(String inputPassword, String storedPassword) throws InvalidPasswordException {
+        if (!storedPassword.equals(inputPassword)) {
+            throw new InvalidPasswordException("Invalid password");
+        }
+    }
 
-            User saved = userJpaRepo.save(user);
+    private boolean isUserExists(String email) {
+        return userJpaRepo.findByEmail(email).isPresent();
+    }
 
-            return saved;
+    private User mapRegisterDTOToUser(RegisterDTO registerDTO) {
+        User user = new User();
+        user.setEmail(registerDTO.getEmail());
+        user.setName(registerDTO.getName());
+        user.setPhone(registerDTO.getPhone());
+        user.setRole(Role.fromString(registerDTO.getRole()));
+        user.setPasswordHash(registerDTO.getPassword()); // Encrypt if needed
+        return user;
     }
 }
+
