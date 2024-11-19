@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ua.bus.app.config.ServiceTestConfig;
+import ua.bus.app.model.entity.Route;
 import ua.bus.app.model.entity.User;
+import ua.bus.app.model.mapper.RouteMapper;
 import ua.bus.app.model.mapper.UserMapper;
 
 import java.io.IOException;
@@ -21,12 +23,16 @@ import java.util.List;
 public class ServiceTestParent {
     @Autowired
     protected ObjectMapper objectMapper;
+    @Autowired
+    protected RouteMapper routeMapper;
 
     protected List<User> testUsers;
+    protected List<Route> testRoutes;
 
     @BeforeEach
     void setUpParent() {
         initUsers();
+        initRoutes();
     }
 
     private void initUsers() {
@@ -36,6 +42,20 @@ public class ServiceTestParent {
         ) {
 
             testUsers = objectMapper.readValue(inputStream, new TypeReference<List<User>>() {
+            });
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void initRoutes() {
+        try(final InputStream inputStream = this.getClass().getClassLoader()
+                .getResourceAsStream("route-data.json");
+
+        ) {
+
+            testRoutes = objectMapper.readValue(inputStream, new TypeReference<List<Route>>() {
             });
 
         } catch (IOException e) {

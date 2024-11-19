@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import ua.bus.app.exception.UserNotFoundException;
 import ua.bus.app.model.dto.RouteDTO;
 import ua.bus.app.model.dto.RouteItemDTO;
-import ua.bus.app.model.dto.UserDTO;
 import ua.bus.app.model.entity.Route;
 import ua.bus.app.model.entity.User;
 import ua.bus.app.model.mapper.RouteMapper;
@@ -27,11 +26,6 @@ public class RouteServiceImpl implements RouteService {
     private final UserJpaRepo userJpaRepo;
 
     @Override
-    public RouteDTO getRouteById(Long id) {
-        return routeMapper.toRouteDTO(getRouteByIdOrThrow(id));
-    }
-
-    @Override
     public RouteDTO createRoute(RouteDTO routeDTO, Long partnerId) {
         User partner = getUserByIdOrThrow(partnerId);
         Route route = routeMapper.toRoute(routeDTO);
@@ -39,13 +33,6 @@ public class RouteServiceImpl implements RouteService {
         return routeMapper.toRouteDTO(routeRepo.save(route));
     }
 
-    @Override
-    public RouteDTO updateRoute(Long id, RouteDTO routeDTO) {
-        validateRouteExistence(id);
-        Route route = routeMapper.toRoute(routeDTO);
-        route.setId(id);
-        return routeMapper.toRouteDTO(routeRepo.save(route));
-    }
 
     @Override
     public void deleteRoute(Long id) {
@@ -58,13 +45,6 @@ public class RouteServiceImpl implements RouteService {
         User partner = getUserByIdOrThrow(partnerId);
         return routeRepo.findByPartner(partner).stream()
                 .map(routeMapper::toRouteDTO)
-                .toList();
-    }
-
-    @Override
-    public List<RouteItemDTO> getAllRoutes() {
-        return routeRepo.findAll().stream()
-                .map(routeMapper::toRouteItemDTO)
                 .toList();
     }
 

@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "startLocation": "Kyiv",
+    "endLocation": "Lviv",
+    "description": "Scenic route through the Carpathian Mountains",
+    "price": 1000,
+    "partner": {
+      "id": 5,
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    },
+    "stops": [
+      {
+        "id": 101,
+        "locationName": "Zhytomyr"
+      },
+      {
+        "id": 102,
+        "locationName": "Ternopil"
+      }
+    ]
+  }
+]
