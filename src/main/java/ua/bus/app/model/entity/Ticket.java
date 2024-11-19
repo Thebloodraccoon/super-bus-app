@@ -28,6 +28,9 @@ public class Ticket {
     @Column(nullable = false)
     private LocalDateTime purchaseDate;
 
+    @Column(nullable = false)
+    private String routeName;
+
     @Column(length = 50, columnDefinition = "VARCHAR(50) DEFAULT 'куплений'")
     private String status = "куплений";
 

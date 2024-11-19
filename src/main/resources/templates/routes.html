@@ -12,7 +12,7 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Super Bus</a>
+                <a class="navbar-brand" href="/">Super Bus</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -43,8 +43,8 @@
             <p class="lead">Подорожуйте по найкращим маршрутам по всій Україні</p>
 
             <!-- Форма для введення маршруту -->
-            <form action="/routes" method="get" class="d-flex justify-content-center search-form">
-                <input type="text" id="from" name="from"  placeholder="Звідки" class="form-control me-2">
+            <form id="searchForm" action="/routes" method="get" class="d-flex justify-content-center search-form">
+                <input type="text" id="from" name="from" placeholder="Звідки" class="form-control me-2">
                 <input type="text" id="to" name="to" placeholder="Куди" class="form-control me-2">
                 <button type="submit" class="btn btn-success">🔍 Пошук</button>
             </form>
@@ -166,5 +166,42 @@
 <!-- Підключаємо Bootstrap JS та Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        let valid = true;
+
+        // Перевірка поля "Звідки" і обробка пробілів
+        const fromField = document.getElementById('from');
+        const fromFeedback = document.getElementById('fromFeedback');
+        fromField.value = fromField.value.trim(); // Обрізаємо зайві пробіли
+        if (fromField.value === "") {
+            valid = false;
+            fromField.classList.add("is-invalid");
+            fromFeedback.style.display = 'block'; // Показуємо повідомлення про помилку
+        } else {
+            fromField.classList.remove("is-invalid");
+            fromFeedback.style.display = 'none'; // Приховуємо повідомлення
+        }
+
+        // Перевірка поля "Куди" і обробка пробілів
+        const toField = document.getElementById('to');
+        const toFeedback = document.getElementById('toFeedback');
+        toField.value = toField.value.trim(); // Обрізаємо зайві пробіли
+        if (toField.value === "") {
+            valid = false;
+            toField.classList.add("is-invalid");
+            toFeedback.style.display = 'block'; // Показуємо повідомлення про помилку
+        } else {
+            toField.classList.remove("is-invalid");
+            toFeedback.style.display = 'none'; // Приховуємо повідомлення
+        }
+
+        // Якщо хоча б одне поле некоректне, блокуємо відправку форми
+        if (!valid) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    });
+</script>
 </body>
 </html>

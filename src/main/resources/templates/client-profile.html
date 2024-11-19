@@ -85,7 +85,7 @@
                         <div class="col-md-6 mb-4" th:each="ticket : ${tickets}">
                             <div class="card shadow-lg border-0 h-100">
                                 <div class="card-body">
-<!--                                    <h5 class="card-title text-primary" th:text="${ticket.routeDTO.startLocation} + ' - ' + ${ticket.routeDTO.endLocation}"></h5>-->
+                                    <h5 class="card-title text-primary" th:text="${ticket.routeName}"></h5>
                                     <p class="text-muted" th:text="'Дата покупки: ' + ${ticket.purchaseDate}"></p>
                                     <p class="text-muted" th:text="'Місця: ' + ${ticket.seats}"></p>
                                     <p class="text-muted" th:text="'Ціна: ' + ${ticket.price} + ' грн'"></p>
@@ -105,6 +105,7 @@
                         <input type="text" id="to" name="to" placeholder="Куди" class="form-control me-2">
                         <button type="submit" class="btn btn-success">🔍 Пошук</button>
                     </form>
+
                 </div>
             </section>
 
@@ -182,6 +183,7 @@
                             <div class="modal-body">
                                 <form th:action="@{'/user/client/' + ${user.id}}" method="post">
                                     <input type="hidden" th:value="${route.id}" name="routeId">
+                                    <input type="hidden" th:value="${route.startLocation} + ' - ' + ${route.endLocation}" name="routeName">
                                     <div class="mb-3">
                                         <label for="purchaseDate" class="form-label">Дата подорожі</label>
                                         <input
@@ -251,6 +253,21 @@
                 const priceInput = inputElement.closest('.modal-body').querySelector('#price'); // Знаходимо поле "Загальна ціна"
                 priceInput.value = totalPrice.toFixed(2); // Оновлюємо значення
             }
+
+             document.getElementById('searchForm').addEventListener('submit', function(event) {
+                // Обрізаємо пробіли в полях "Звідки" та "Куди"
+                const fromField = document.getElementById('from');
+                const toField = document.getElementById('to');
+
+                fromField.value = fromField.value.trim(); // Обрізаємо зайві пробіли
+                toField.value = toField.value.trim(); // Обрізаємо зайві пробіли
+
+                // Якщо одне з полів порожнє після обрізання пробілів, запобігаємо відправці форми
+                if (fromField.value === "" || toField.value === "") {
+                    event.preventDefault(); // Запобігає відправці форми
+                    alert("Будь ласка, заповніть обидва поля!");
+                }
+            });
         </script>
     </body>
 </html>
